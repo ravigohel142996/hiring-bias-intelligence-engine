@@ -64,10 +64,10 @@ def initialize_session_state():
         st.session_state.data_generated = False
 
 
-def generate_data():
+def generate_data(n_candidates=1000):
     """Generate candidate data and run all analyses."""
     with st.spinner("🔄 Generating candidates..."):
-        st.session_state.candidates = generate_candidates(n_candidates=1000, random_seed=42)
+        st.session_state.candidates = generate_candidates(n_candidates=n_candidates, random_seed=42)
     
     with st.spinner("⚙️ Evaluating rules..."):
         engine = HiringRuleEngine()
@@ -97,10 +97,11 @@ def page_overview():
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
         if st.button("🔄 Generate New Data", key="gen_data", use_container_width=True):
-            generate_data()
+            n_candidates_value = st.session_state.get('n_candidates_input', 1000)
+            generate_data(n_candidates=n_candidates_value)
     
     with col2:
-        n_candidates = st.number_input("Candidates", min_value=100, max_value=10000, value=1000, step=100)
+        n_candidates = st.number_input("Candidates", min_value=100, max_value=10000, value=1000, step=100, key='n_candidates_input')
     
     if not st.session_state.data_generated:
         st.info("👆 Click 'Generate New Data' to start analysis")
@@ -221,9 +222,8 @@ def page_overview():
     tier_bias = bias_report['proxy_biases']['college_tier']
     gap_bias = bias_report['proxy_biases']['employment_gap']
     
-    col1, col2 = st.columns(2) if not is_mobile else st.columns(1)
-    
-    with col1:
+    if is_mobile:
+        # Mobile: single column
         st.markdown(f"""
         <div class="glass-card">
             <h4>📚 College Tier Bias</h4>
@@ -232,8 +232,31 @@ def page_overview():
                                            'Bias Detected' if tier_bias['bias_detected'] else 'Fair')}</p>
         </div>
         """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div class="glass-card">
+            <h4>⏳ Employment Gap Bias</h4>
+            <p>Penalty: <strong>{gap_bias['penalty']:.1f}%</strong></p>
+            <p>Status: {create_status_badge('error' if gap_bias['bias_detected'] else 'success',
+                                           'Bias Detected' if gap_bias['bias_detected'] else 'Fair')}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        # Desktop/tablet: two columns
+        col1, col2 = st.columns(2)
+        # Desktop/tablet: two columns
+        col1, col2 = st.columns(2)
     
-    if not is_mobile:
+        with col1:
+            st.markdown(f"""
+            <div class="glass-card">
+                <h4>📚 College Tier Bias</h4>
+                <p>Disparity: <strong>{tier_bias['disparity']:.1f}%</strong></p>
+                <p>Status: {create_status_badge('error' if tier_bias['bias_detected'] else 'success', 
+                                               'Bias Detected' if tier_bias['bias_detected'] else 'Fair')}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
         with col2:
             st.markdown(f"""
             <div class="glass-card">
@@ -243,15 +266,6 @@ def page_overview():
                                                'Bias Detected' if gap_bias['bias_detected'] else 'Fair')}</p>
             </div>
             """, unsafe_allow_html=True)
-    else:
-        st.markdown(f"""
-        <div class="glass-card">
-            <h4>⏳ Employment Gap Bias</h4>
-            <p>Penalty: <strong>{gap_bias['penalty']:.1f}%</strong></p>
-            <p>Status: {create_status_badge('error' if gap_bias['bias_detected'] else 'success',
-                                           'Bias Detected' if gap_bias['bias_detected'] else 'Fair')}</p>
-        </div>
-        """, unsafe_allow_html=True)
 
 
 def page_bias_heatmap():

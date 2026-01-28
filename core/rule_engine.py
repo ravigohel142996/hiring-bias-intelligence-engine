@@ -73,9 +73,7 @@ class HiringRuleEngine:
             core_rules_passed += 1
         
         # Decision logic
-        if core_rules_passed >= 5:  # All core + bonus
-            decision = 'ACCEPT'
-        elif core_rules_passed >= 4:  # Most rules passed
+        if core_rules_passed >= 4:  # Most or all rules passed
             decision = 'ACCEPT'
         elif core_rules_passed >= 2:  # Some rules passed
             decision = 'REVIEW'
