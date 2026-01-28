@@ -17,7 +17,7 @@ def generate_candidates(n_candidates=10000, random_seed=42):
     Parameters:
     -----------
     n_candidates : int, default=10000
-        Number of candidate profiles to generate
+        Number of candidate profiles to generate (must be positive)
     random_seed : int, default=42
         Random seed for reproducibility
         
@@ -31,7 +31,16 @@ def generate_candidates(n_candidates=10000, random_seed=42):
         - college_tier: 1, 2, or 3 (tier 1 = top tier)
         - employment_gap: 0-5 (years of employment gap)
         - certifications_count: 0-5 (number of professional certifications)
+        
+    Raises:
+    -------
+    ValueError
+        If n_candidates is not a positive integer
     """
+    # Input validation
+    if not isinstance(n_candidates, int) or n_candidates <= 0:
+        raise ValueError(f"n_candidates must be a positive integer, got {n_candidates}")
+    
     # Use RandomState for better reproducibility
     rng = np.random.RandomState(random_seed)
     
@@ -166,7 +175,7 @@ def _generate_boundary_cases(n, rng):
         'cgpa': rng.uniform(8, 10, high_low).round(2),
         'college_tier': rng.choice([1, 2], high_low),
         'employment_gap': rng.uniform(0, 1, high_low).round(1),
-        'certifications_count': rng.randint(3, 6, high_low)  # 3-5 certifications
+        'certifications_count': rng.randint(3, 6, high_low)  # 3-5 certifications (inclusive)
     }
     
     # Type 4: Low skills, high experience (25% + remainder)
@@ -177,7 +186,7 @@ def _generate_boundary_cases(n, rng):
         'cgpa': rng.uniform(5, 7, low_high).round(2),
         'college_tier': np.full(low_high, 3, dtype=int),
         'employment_gap': rng.uniform(1, 3, low_high).round(1),
-        'certifications_count': rng.randint(0, 3, low_high)  # 0-2 certifications (intentionally low)
+        'certifications_count': rng.randint(0, 3, low_high)  # 0-2 certifications
     }
     
     # Combine all boundary types
@@ -225,7 +234,7 @@ def _generate_adversarial_cases(n, rng):
         'cgpa': rng.uniform(7, 9, type2).round(2),
         'college_tier': np.full(type2, 3, dtype=int),
         'employment_gap': rng.uniform(0, 1, type2).round(1),
-        'certifications_count': rng.randint(3, 6, type2)  # 3-5 certifications (high count)
+        'certifications_count': rng.randint(3, 6, type2)  # 3-5 certifications (inclusive)
     }
     
     # Type 3: Employment gap with strong recovery (20%)
@@ -237,7 +246,7 @@ def _generate_adversarial_cases(n, rng):
         'cgpa': rng.uniform(7, 9, type3).round(2),
         'college_tier': rng.choice([1, 2], type3),
         'employment_gap': rng.uniform(3, 5, type3).round(1),
-        'certifications_count': rng.randint(4, 6, type3)  # 4-5 certifications (high count)
+        'certifications_count': rng.randint(4, 6, type3)  # 4-5 certifications (inclusive)
     }
     
     # Type 4: Low CGPA, high everything else (20%)
@@ -249,7 +258,7 @@ def _generate_adversarial_cases(n, rng):
         'cgpa': rng.uniform(4, 6, type4).round(2),
         'college_tier': rng.choice([1, 2], type4),
         'employment_gap': rng.uniform(0, 1, type4).round(1),
-        'certifications_count': rng.randint(3, 6, type4)  # 3-5 certifications (high count)
+        'certifications_count': rng.randint(3, 6, type4)  # 3-5 certifications (inclusive)
     }
     
     # Type 5: Mixed anomalies (20% + remainder)
@@ -261,7 +270,7 @@ def _generate_adversarial_cases(n, rng):
         'cgpa': rng.uniform(0, 10, type5).round(2),
         'college_tier': rng.choice([1, 2, 3], type5),
         'employment_gap': rng.uniform(0, 5, type5).round(1),
-        'certifications_count': rng.randint(0, 6, type5)  # 0-5 certifications (full range)
+        'certifications_count': rng.randint(0, 6, type5)  # 0-5 certifications (inclusive, full range)
     }
     
     # Combine all adversarial types
