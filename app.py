@@ -32,6 +32,26 @@ from ui.components import (
 from ui.animations import create_metric_card, create_status_badge
 
 
+# Initialize session state FIRST - before anything else
+def initialize_session_state():
+    """Initialize session state variables at app startup."""
+    if 'candidates' not in st.session_state:
+        st.session_state.candidates = None
+    if 'results' not in st.session_state:
+        st.session_state.results = None
+    if 'bias_report' not in st.session_state:
+        st.session_state.bias_report = None
+    if 'simulation_results' not in st.session_state:
+        st.session_state.simulation_results = None
+    if 'engine' not in st.session_state:
+        st.session_state.engine = None
+    if 'data_generated' not in st.session_state:
+        st.session_state.data_generated = False
+
+
+# Call initialization immediately
+initialize_session_state()
+
 # Page configuration
 st.set_page_config(
     page_title="Hiring Bias Intelligence Engine",
@@ -48,20 +68,6 @@ device_info = device_detector()
 is_mobile = device_info['is_mobile']
 is_tablet = device_info['is_tablet']
 is_desktop = device_info['is_desktop']
-
-
-def initialize_session_state():
-    """Initialize session state variables."""
-    if 'candidates' not in st.session_state:
-        st.session_state.candidates = None
-    if 'results' not in st.session_state:
-        st.session_state.results = None
-    if 'bias_report' not in st.session_state:
-        st.session_state.bias_report = None
-    if 'simulation_results' not in st.session_state:
-        st.session_state.simulation_results = None
-    if 'data_generated' not in st.session_state:
-        st.session_state.data_generated = False
 
 
 def generate_data(n_candidates=1000):
@@ -493,34 +499,32 @@ def page_insights():
 
 def main():
     """Main application."""
-    initialize_session_state()
-    
-  # Sidebar navigation
-with st.sidebar:
-    st.image(
-        "https://via.placeholder.com/150x50/667eea/ffffff?text=Bias+Engine",
-        width="stretch"
-    )
+    # Sidebar navigation
+    with st.sidebar:
+        st.image(
+            "https://via.placeholder.com/150x50/667eea/ffffff?text=Bias+Engine",
+            width="stretch"
+        )
 
-    st.markdown("---")
-    
-    page = st.radio(
-        "Navigation",
-        ["Overview", "Bias Heatmap", "Rule Impact", "Collapse Simulation", "Insights"],
-        key="nav"
-    )
-    
-    st.markdown("---")
-    st.markdown("### ℹ️ About")
-    st.markdown("""
-    This platform stress-tests hiring rules to expose:
-    - Hidden bias amplification  
-    - Rule dominance & collapse  
-    - Unstable decision boundaries  
-    """)
-    
-    st.markdown("---")
-    st.markdown("Made with ❤️ using Streamlit")
+        st.markdown("---")
+        
+        page = st.radio(
+            "Navigation",
+            ["Overview", "Bias Heatmap", "Rule Impact", "Collapse Simulation", "Insights"],
+            key="nav"
+        )
+        
+        st.markdown("---")
+        st.markdown("### ℹ️ About")
+        st.markdown("""
+        This platform stress-tests hiring rules to expose:
+        - Hidden bias amplification  
+        - Rule dominance & collapse  
+        - Unstable decision boundaries  
+        """)
+        
+        st.markdown("---")
+        st.markdown("Made with ❤️ using Streamlit")
 
     # Route to pages
     if page == "Overview":
