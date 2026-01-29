@@ -495,29 +495,32 @@ def main():
     """Main application."""
     initialize_session_state()
     
-    # Sidebar navigation
-    with st.sidebar:
-        st.image("https://via.placeholder.com/150x50/667eea/ffffff?text=Bias+Engine", use_column_width=True)
-        st.markdown("---")
-        
-        page = st.radio(
-            "Navigation",
-            ["Overview", "Bias Heatmap", "Rule Impact", "Collapse Simulation", "Insights"],
-            key="nav"
-        )
-        
-        st.markdown("---")
-        st.markdown("### ℹ️ About")
-        st.markdown("""
-        This platform stress-tests hiring rules to expose:
-        - Hidden bias amplification
-        - Rule dominance & collapse  
-        - Unstable decision boundaries
-        """)
-        
-        st.markdown("---")
-        st.markdown("Made with ❤️ using Streamlit")
+   # Sidebar navigation
+with st.sidebar:
+    st.image(
+        "https://via.placeholder.com/150x50/667eea/ffffff?text=Bias+Engine",
+        width="container"
+    )
+    st.markdown("---")
     
+    page = st.radio(
+        "Navigation",
+        ["Overview", "Bias Heatmap", "Rule Impact", "Collapse Simulation", "Insights"],
+        key="nav"
+    )
+    
+    st.markdown("---")
+    st.markdown("### ℹ️ About")
+    st.markdown("""
+    This platform stress-tests hiring rules to expose:
+    - Hidden bias amplification
+    - Rule dominance & collapse  
+    - Unstable decision boundaries
+    """)
+    
+    st.markdown("---")
+    st.markdown("Made with ❤️ using Streamlit")
+
     # Route to pages
     if page == "Overview":
         page_overview()
