@@ -117,7 +117,10 @@ def create_acceptance_by_cluster_chart(acceptance_by_cluster: Dict, title="Accep
             color=acceptance_rates,
             colorscale='Viridis',
             showscale=True,
-            colorbar=dict(title="Rate %", titlefont=dict(color='white'), tickfont=dict(color='white'))
+            colorbar=dict(
+                title=dict(text="Rate %", font=dict(color='white')),
+                tickfont=dict(color='white')
+            )
         ),
         hovertemplate='<b>%{x}</b><br>Acceptance Rate: %{y:.1f}%<extra></extra>'
     ))
@@ -125,14 +128,12 @@ def create_acceptance_by_cluster_chart(acceptance_by_cluster: Dict, title="Accep
     fig.update_layout(
         title=dict(text=title, font=dict(size=20, color='white')),
         xaxis=dict(
-            title="Cluster",
-            titlefont=dict(color='white'),
+            title=dict(text="Cluster", font=dict(color='white')),
             tickfont=dict(color='white'),
             gridcolor='rgba(255,255,255,0.1)'
         ),
         yaxis=dict(
-            title="Acceptance Rate (%)",
-            titlefont=dict(color='white'),
+            title=dict(text="Acceptance Rate (%)", font=dict(color='white')),
             tickfont=dict(color='white'),
             gridcolor='rgba(255,255,255,0.1)',
             range=[0, 100]
@@ -179,19 +180,20 @@ def create_bias_heatmap(results_df: pd.DataFrame, title="Bias Heatmap"):
         texttemplate='%{text}%',
         textfont=dict(size=14, color='white'),
         hovertemplate='<b>%{y}</b><br>%{x} Gap<br>Acceptance: %{z:.1f}%<extra></extra>',
-        colorbar=dict(title="Rate %", titlefont=dict(color='white'), tickfont=dict(color='white'))
+        colorbar=dict(
+            title=dict(text="Rate %", font=dict(color='white')),
+            tickfont=dict(color='white')
+        )
     ))
     
     fig.update_layout(
         title=dict(text=title, font=dict(size=20, color='white')),
         xaxis=dict(
-            title="Employment Gap",
-            titlefont=dict(color='white'),
+            title=dict(text="Employment Gap", font=dict(color='white')),
             tickfont=dict(color='white')
         ),
         yaxis=dict(
-            title="College Tier",
-            titlefont=dict(color='white'),
+            title=dict(text="College Tier", font=dict(color='white')),
             tickfont=dict(color='white')
         ),
         paper_bgcolor='rgba(0,0,0,0)',
@@ -240,8 +242,7 @@ def create_rule_impact_chart(rule_impact: Dict, title="Rule Impact on Acceptance
     fig.update_layout(
         title=dict(text=title, font=dict(size=20, color='white')),
         xaxis=dict(
-            title="Impact Score (%)",
-            titlefont=dict(color='white'),
+            title=dict(text="Impact Score (%)", font=dict(color='white')),
             tickfont=dict(color='white'),
             gridcolor='rgba(255,255,255,0.1)',
             zeroline=True,
@@ -249,7 +250,6 @@ def create_rule_impact_chart(rule_impact: Dict, title="Rule Impact on Acceptance
             zerolinewidth=2
         ),
         yaxis=dict(
-            titlefont=dict(color='white'),
             tickfont=dict(color='white')
         ),
         paper_bgcolor='rgba(0,0,0,0)',
@@ -308,13 +308,11 @@ def create_stability_chart(scenarios: Dict, title="Decision Stability Across Sce
     fig.update_layout(
         title=dict(text=title, font=dict(size=20, color='white')),
         xaxis=dict(
-            titlefont=dict(color='white'),
             tickfont=dict(color='white', size=10),
             tickangle=-45
         ),
         yaxis=dict(
-            title="Percentage (%)",
-            titlefont=dict(color='white'),
+            title=dict(text="Percentage (%)", font=dict(color='white')),
             tickfont=dict(color='white'),
             gridcolor='rgba(255,255,255,0.1)',
             range=[0, 100]
