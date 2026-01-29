@@ -8,7 +8,40 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
+import logging
 from typing import Dict, List
+
+# Configure logging
+logger = logging.getLogger(__name__)
+
+
+def create_error_fallback_figure(height: int = 400):
+    """
+    Create a fallback figure for when visualization fails.
+    
+    Parameters:
+    -----------
+    height : int
+        Height of the figure in pixels
+        
+    Returns:
+    --------
+    plotly.graph_objects.Figure
+        Error fallback figure
+    """
+    fig = go.Figure()
+    fig.add_annotation(
+        text="Visualization temporarily unavailable",
+        xref="paper", yref="paper",
+        x=0.5, y=0.5, showarrow=False,
+        font=dict(size=16, color='white')
+    )
+    fig.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=height
+    )
+    return fig
 
 
 def create_metric_cards(metrics: Dict):
@@ -89,20 +122,8 @@ def create_decision_pie_chart(results_df: pd.DataFrame, title="Decision Distribu
         
         return fig
     except Exception as e:
-        # Return empty figure with error message
-        fig = go.Figure()
-        fig.add_annotation(
-            text="Visualization temporarily unavailable",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False,
-            font=dict(size=16, color='white')
-        )
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            height=400
-        )
-        return fig
+        logger.error(f"Failed to create decision pie chart: {e}", exc_info=True)
+        return create_error_fallback_figure(height=400)
 
 
 def create_acceptance_by_cluster_chart(acceptance_by_cluster: Dict, title="Acceptance Rate by Cluster"):
@@ -167,20 +188,8 @@ def create_acceptance_by_cluster_chart(acceptance_by_cluster: Dict, title="Accep
         
         return fig
     except Exception as e:
-        # Return empty figure with error message
-        fig = go.Figure()
-        fig.add_annotation(
-            text="Visualization temporarily unavailable",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False,
-            font=dict(size=16, color='white')
-        )
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            height=500
-        )
-        return fig
+        logger.error(f"Failed to create acceptance by cluster chart: {e}", exc_info=True)
+        return create_error_fallback_figure(height=500)
 
 
 def create_bias_heatmap(results_df: pd.DataFrame, title="Bias Heatmap"):
@@ -242,20 +251,8 @@ def create_bias_heatmap(results_df: pd.DataFrame, title="Bias Heatmap"):
         
         return fig
     except Exception as e:
-        # Return empty figure with error message
-        fig = go.Figure()
-        fig.add_annotation(
-            text="Visualization temporarily unavailable",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False,
-            font=dict(size=16, color='white')
-        )
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            height=400
-        )
-        return fig
+        logger.error(f"Failed to create bias heatmap: {e}", exc_info=True)
+        return create_error_fallback_figure(height=400)
 
 
 def create_rule_impact_chart(rule_impact: Dict, title="Rule Impact on Acceptance"):
@@ -315,20 +312,8 @@ def create_rule_impact_chart(rule_impact: Dict, title="Rule Impact on Acceptance
         
         return fig
     except Exception as e:
-        # Return empty figure with error message
-        fig = go.Figure()
-        fig.add_annotation(
-            text="Visualization temporarily unavailable",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False,
-            font=dict(size=16, color='white')
-        )
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            height=400
-        )
-        return fig
+        logger.error(f"Failed to create rule impact chart: {e}", exc_info=True)
+        return create_error_fallback_figure(height=400)
 
 
 def create_stability_chart(scenarios: Dict, title="Decision Stability Across Scenarios"):
@@ -406,20 +391,8 @@ def create_stability_chart(scenarios: Dict, title="Decision Stability Across Sce
         
         return fig
     except Exception as e:
-        # Return empty figure with error message
-        fig = go.Figure()
-        fig.add_annotation(
-            text="Visualization temporarily unavailable",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False,
-            font=dict(size=16, color='white')
-        )
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            height=500
-        )
-        return fig
+        logger.error(f"Failed to create stability chart: {e}", exc_info=True)
+        return create_error_fallback_figure(height=500)
 
 
 def device_detector():
