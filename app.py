@@ -495,12 +495,13 @@ def main():
     """Main application."""
     initialize_session_state()
     
-   # Sidebar navigation
+  # Sidebar navigation
 with st.sidebar:
     st.image(
         "https://via.placeholder.com/150x50/667eea/ffffff?text=Bias+Engine",
-        width="container"
+        width="stretch"
     )
+
     st.markdown("---")
     
     page = st.radio(
@@ -513,9 +514,9 @@ with st.sidebar:
     st.markdown("### ℹ️ About")
     st.markdown("""
     This platform stress-tests hiring rules to expose:
-    - Hidden bias amplification
+    - Hidden bias amplification  
     - Rule dominance & collapse  
-    - Unstable decision boundaries
+    - Unstable decision boundaries  
     """)
     
     st.markdown("---")
